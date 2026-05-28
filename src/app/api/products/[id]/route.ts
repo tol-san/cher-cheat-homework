@@ -4,11 +4,13 @@ const PRODUCTS_API_URL = `${process.env.ISHOP_API_BASE_URL}/products`;
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
+
     const response = await fetch(
-      `${PRODUCTS_API_URL}/${encodeURIComponent(params.id)}`,
+      `${PRODUCTS_API_URL}/${encodeURIComponent(id)}`,
       {
         cache: "no-store",
       },
@@ -22,7 +24,6 @@ export async function GET(
     }
 
     const data = await response.json();
-
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(
